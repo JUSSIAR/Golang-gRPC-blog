@@ -1,0 +1,44 @@
+Enum entity_type {
+  post
+  comment
+}
+
+Table user {
+  user_id varchar [primary key]
+}
+
+Table post {
+  post_id uuid [primary key]
+  author_id varchar
+  title varchar
+  text text
+  timestamp timestamp
+  like_count int
+}
+
+Table comment {
+  comment_id uuid [primary key]
+  author_id varchar
+  post_id uuid
+  text text
+  timestamp timestamp
+  like_count int
+}
+
+Table relation {
+  id int [primary key]
+  author_id varchar
+  post_id uuid [null]
+  comment_id uuid [null]
+  entity_type entity_type
+  value bool
+}
+
+Ref: user.user_id < post.author_id
+Ref: user.user_id < comment.author_id
+Ref: user.user_id < relation.author_id
+
+Ref: post.post_id < comment.post_id
+Ref: post.post_id < relation.post_id
+
+Ref: comment.comment_id < relation.comment_id

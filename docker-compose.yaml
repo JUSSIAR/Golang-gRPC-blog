@@ -1,0 +1,46 @@
+version: '3.9'
+
+services:
+  grpc-server:
+    build: ./service
+    ports:
+      - 5001:5001
+      - 50051:50051
+    environment:
+      - POSTGRESS_URL=postgres:5432
+      - REDIS_URL=redis:6379
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_DB: "grpc-blog-storage"
+      POSTGRES_USER: "jussiar"
+      POSTGRES_PASSWORD: "admin"
+    ports:
+      - 5432:5432
+    volumes:
+      - ./storages/postgres:/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jussiar -d grpc-blog-storage"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+  
+  redis:
+    image: redis:alpine
+    ports:
+      - 6379:6379
+    volumes:
+      - ./storages/redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    
