@@ -4,3 +4,19 @@ package api;
 
 option go_package = "github.com/JUSSIAR/Golang-gRPC-blog/service/api";
 
+service BlogServer {
+    rpc Like(LikeReq) returns (LikeRsp) {
+        option (google.api.http) = {
+            post: "/like"
+            body: "*"
+        };
+    }
+}
+
+message LikeReq {
+    int id = 1;
+}
+
+message LikeRsp {
+    int id = 1;
+}
