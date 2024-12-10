@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package api;
 
+import "google/protobuf/timestamp.proto";
+
 option go_package = "github.com/JUSSIAR/Golang-gRPC-blog/service/api";
 
 service BlogServer {
@@ -11,12 +13,97 @@ service BlogServer {
             body: "*"
         };
     }
+
+    rpc Unlike(LikeReq) returns (LikeRsp) {
+        option (google.api.http) = {
+            post: "/unlike"
+            body: "*"
+        };
+    }
+
+    rpc CreatePost() returns (PostResponse) {
+        option (google.api.http) = {
+            post: "/posts/create"
+            body: "*"
+        };
+    }
+
+    rpc ReadPost() returns (PostResponse) {
+        option (google.api.http) = {
+            get: "/posts/read"
+        };
+    }
+
+    rpc UpdatePost() returns (PostResponse) {
+        option (google.api.http) = {
+            post: "/posts/update"
+            body: "*"
+        };
+    }
+
+    rpc DeletePost() returns (PostResponse) {
+        option (google.api.http) = {
+            post: "/posts/delete"
+            body: "*"
+        };
+    }
+
+    rpc CreateComment() returns (CommentResponse) {
+        option (google.api.http) = {
+            post: "/commets/create"
+            body: "*"
+        };
+    }
+
+    rpc ReadComment() returns (CommentResponse) {
+        option (google.api.http) = {
+            get: "/commets/read"
+        };
+    }
+
+    rpc UpdateComment() returns (CommentResponse) {
+        option (google.api.http) = {
+            post: "/commets/update"
+            body: "*"
+        };
+    }
+
+    rpc DeleteComment() returns (CommentResponse) {
+        option (google.api.http) = {
+            post: "/commets/delete"
+            body: "*"
+        };
+    }
 }
 
-message LikeReq {
-    int id = 1;
+enum EType {
+    POST = 0;
+    COMMENT = 1;
 }
 
-message LikeRsp {
-    int id = 1;
+message LikeRequest {
+    EType eType = 1;
+	uint64 eId = 2;
+	string authorLogin = 3;
+}
+
+message LikeResponse {
+    uint64 likeCount = 1;
+    bool isLiked = 2; 
+}
+
+message CommentResponse {
+    uint64 id = 1;
+	string authorLogin string = 2;
+	string text = 3;
+	google.protobuf.Timestamp timestamp = 4;
+	uint64 postId = 5;
+}
+
+message PostResponse {
+    uint64 id = 1;
+	string authorLogin = 2;
+	string title = 3;
+	string text = 4;
+	google.protobuf.Timestamp timestamp = 5;
 }
