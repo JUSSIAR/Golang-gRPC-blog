@@ -1,74 +1,75 @@
 syntax = "proto3";
 
-package api;
+package service;
 
+import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
 
 option go_package = "github.com/JUSSIAR/Golang-gRPC-blog/service/api";
 
 service BlogServer {
-    rpc Like(LikeReq) returns (LikeRsp) {
+    rpc Like(LikeRequest) returns (LikeResponse) {
         option (google.api.http) = {
             post: "/like"
             body: "*"
         };
     }
 
-    rpc Unlike(LikeReq) returns (LikeRsp) {
+    rpc Unlike(LikeRequest) returns (LikeResponse) {
         option (google.api.http) = {
             post: "/unlike"
             body: "*"
         };
     }
 
-    rpc CreatePost() returns (PostResponse) {
+    rpc CreatePost(PostRequestCreate) returns (PostResponse) {
         option (google.api.http) = {
             post: "/posts/create"
             body: "*"
         };
     }
 
-    rpc ReadPost() returns (PostResponse) {
+    rpc ReadPost(PostRequestReadDelete) returns (PostResponse) {
         option (google.api.http) = {
             get: "/posts/read"
         };
     }
 
-    rpc UpdatePost() returns (PostResponse) {
+    rpc UpdatePost(PostRequestUpdate) returns (PostResponse) {
         option (google.api.http) = {
             post: "/posts/update"
             body: "*"
         };
     }
 
-    rpc DeletePost() returns (PostResponse) {
+    rpc DeletePost(PostRequestReadDelete) returns (PostResponse) {
         option (google.api.http) = {
             post: "/posts/delete"
             body: "*"
         };
     }
 
-    rpc CreateComment() returns (CommentResponse) {
+    rpc CreateComment(CommentRequestCreate) returns (CommentResponse) {
         option (google.api.http) = {
             post: "/commets/create"
             body: "*"
         };
     }
 
-    rpc ReadComment() returns (CommentResponse) {
+    rpc ReadComment(CommentRequestReadDelete) returns (CommentResponse) {
         option (google.api.http) = {
             get: "/commets/read"
         };
     }
 
-    rpc UpdateComment() returns (CommentResponse) {
+    rpc UpdateComment(CommentRequestUpdate) returns (CommentResponse) {
         option (google.api.http) = {
             post: "/commets/update"
             body: "*"
         };
     }
 
-    rpc DeleteComment() returns (CommentResponse) {
+    rpc DeleteComment(CommentRequestReadDelete) returns (CommentResponse) {
         option (google.api.http) = {
             post: "/commets/delete"
             body: "*"
@@ -94,7 +95,7 @@ message LikeResponse {
 
 message CommentResponse {
     uint64 id = 1;
-	string authorLogin string = 2;
+	string authorLogin = 2;
 	string text = 3;
 	google.protobuf.Timestamp timestamp = 4;
 	uint64 postId = 5;
@@ -106,4 +107,35 @@ message PostResponse {
 	string title = 3;
 	string text = 4;
 	google.protobuf.Timestamp timestamp = 5;
+}
+
+message CommentRequestReadDelete {
+    uint64 id = 1;
+}
+
+message CommentRequestCreate {
+	string authorLogin = 2;
+	string text = 3;
+	uint64 postId = 4;
+}
+
+message CommentRequestUpdate {
+    uint64 id = 1;
+    string text = 2;
+}
+
+message PostRequestReadDelete {
+    uint64 id = 1;
+}
+
+message PostRequestCreate {
+    string authorLogin = 1;
+	string title = 2;
+	string text = 3;
+}
+
+message PostRequestUpdate {
+    uint64 id = 1;
+    string title = 2;
+    string text = 3;
 }
