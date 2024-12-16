@@ -84,8 +84,8 @@ enum EType {
 
 message LikeRequest {
     EType eType = 1;
-	uint64 eId = 2;
-	string authorLogin = 3;
+    uint64 eId = 2;
+    string authorLogin = 3;
 }
 
 message LikeResponse {
@@ -95,18 +95,18 @@ message LikeResponse {
 
 message CommentResponse {
     uint64 id = 1;
-	string authorLogin = 2;
-	string text = 3;
-	google.protobuf.Timestamp timestamp = 4;
-	uint64 postId = 5;
+    string authorLogin = 2;
+    string text = 3;
+    google.protobuf.Timestamp timestamp = 4;
+    uint64 postId = 5;
 }
 
 message PostResponse {
     uint64 id = 1;
-	string authorLogin = 2;
-	string title = 3;
-	string text = 4;
-	google.protobuf.Timestamp timestamp = 5;
+    string authorLogin = 2;
+    string title = 3;
+    string text = 4;
+    google.protobuf.Timestamp timestamp = 5;
 }
 
 message CommentRequestReadDelete {
@@ -114,9 +114,9 @@ message CommentRequestReadDelete {
 }
 
 message CommentRequestCreate {
-	string authorLogin = 2;
-	string text = 3;
-	uint64 postId = 4;
+    string authorLogin = 2;
+    string text = 3;
+    uint64 postId = 4;
 }
 
 message CommentRequestUpdate {
@@ -130,8 +130,8 @@ message PostRequestReadDelete {
 
 message PostRequestCreate {
     string authorLogin = 1;
-	string title = 2;
-	string text = 3;
+    string title = 2;
+    string text = 3;
 }
 
 message PostRequestUpdate {

@@ -1,9 +1,10 @@
 module github.com/JUSSIAR/Golang-gRPC-blog/service
 
-go 1.22.1
+go 1.22.7
 
 require (
-	google.golang.org/genproto/googleapis/api v0.0.0-20241015192408-796eee8c2d53
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.24.0
+	google.golang.org/genproto/googleapis/api v0.0.0-20241118233622-e639e219e697
 	google.golang.org/grpc v1.69.0
 	google.golang.org/protobuf v1.35.2
 	gorm.io/driver/postgres v1.5.11
