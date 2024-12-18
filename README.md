@@ -10,6 +10,18 @@
 3) run autogen
 
 
-### Launch
+### Launch server
 
 1) `docker-compose up`
+
+
+### Launch client
+
+1) `cd client`
+
+2) `docker-compose up`
+
+
+### Author
+
+- JUSSIAR
