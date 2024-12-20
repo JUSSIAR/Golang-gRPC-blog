@@ -23,7 +23,7 @@ func Logout(ctx context.Context, redisDB redis.Client, user string) {
 	panicIfErr(err)
 }
 
-func CheckLigin(ctx context.Context, redisDB redis.Client, user string) bool {
+func CheckLogin(ctx context.Context, redisDB redis.Client, user string) bool {
 	key := LOGIN_PREFIX + user
 	_, err := redisDB.Get(ctx, key).Result()
 	if err == redis.Nil {

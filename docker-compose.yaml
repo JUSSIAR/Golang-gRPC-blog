@@ -48,6 +48,8 @@ services:
       retries: 5
     restart: unless-stopped
 
+  include: client/compose.yaml
+
 networks:
   service-network:
     driver: bridge
