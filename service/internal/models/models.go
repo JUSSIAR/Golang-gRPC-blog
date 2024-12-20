@@ -1,6 +1,8 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type Post struct {
 	ID          uint      `gorm:"primary_key"`

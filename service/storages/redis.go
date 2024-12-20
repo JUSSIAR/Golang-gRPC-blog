@@ -7,7 +7,7 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
-func ConnectRedis(ctx context.Context) redis.Client {
+func ConnectRedis(ctx context.Context) *redis.Client {
 	redisURL, exists := os.LookupEnv("REDIS_URL")
 	if !exists {
 		redisURL = "localhost:6379"
@@ -20,5 +20,5 @@ func ConnectRedis(ctx context.Context) redis.Client {
 		panic(err)
 	}
 
-	return *redisDB
+	return redisDB
 }

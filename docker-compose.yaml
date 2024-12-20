@@ -13,6 +13,8 @@ services:
     depends_on:
       - postgres
       - redis
+    networks:
+      - service-network
 
   postgres:
     image: postgres:14-alpine
@@ -45,4 +47,10 @@ services:
       timeout: 10s
       retries: 5
     restart: unless-stopped
+
+networks:
+  service-network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.host_binding_ipv4: "127.0.0.1"
     

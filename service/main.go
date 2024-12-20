@@ -9,9 +9,8 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/JUSSIAR/Golang-gRPC-blog/service/internal/cache"
+	"github.com/JUSSIAR/Golang-gRPC-blog/service/internal/server"
 	"github.com/JUSSIAR/Golang-gRPC-blog/service/storages"
-	"github.com/go-redis/redis/v8"
 	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -24,34 +23,6 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.uber.org/zap"
 )
-
-type BlogServer struct {
-	api.BlogServerServer
-	Logger        *zap.Logger
-	SimpleCounter *prometheus.CounterVec
-	Histogram     *prometheus.HistogramVec
-	redisClent    *redis.Client
-}
-
-func (s *BlogServer) Like(
-	ctx context.Context, req *api.LikeRequest,
-) (*api.LikeResponse, error) {
-	cache.Like(ctx, *s.redisClent, string(req.EType), req.EId, req.AuthorLogin)
-	return &api.LikeResponse{
-		LikeCount: 1,
-		IsLiked:   true,
-	}, nil
-}
-
-func (s *BlogServer) Unlike(
-	ctx context.Context, req *api.LikeRequest,
-) (*api.LikeResponse, error) {
-	cache.Unlike(ctx, *s.redisClent, string(req.EType), req.EId, req.AuthorLogin)
-	return &api.LikeResponse{
-		LikeCount: 0,
-		IsLiked:   false,
-	}, nil
-}
 
 //go:embed api/api.swagger.json
 var swaggerData []byte
@@ -106,11 +77,12 @@ func main() {
 		log.Fatalf("Failed to listen: %v", err)
 	}
 
-	s := &BlogServer{
+	s := &server.BlogServer{
 		Logger:        logger,
 		SimpleCounter: counter,
 		Histogram:     histCounter,
-		redisClent:    &redisDB,
+		RedisClent:    redisDB,
+		PostgresDB:    postgresDB,
 	}
 	grpcServer := grpc.NewServer(
 		grpc.ChainUnaryInterceptor(
