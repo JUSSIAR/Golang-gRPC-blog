@@ -2,11 +2,13 @@ package client
 
 import (
 	"context"
+	"flag"
 	"log"
 	"math/rand"
 	"sync"
 
 	"github.com/JUSSIAR/Golang-gRPC-blog/service/api"
+	"google.golang.org/grpc"
 )
 
 const (
@@ -16,6 +18,10 @@ const (
 	MESSAGE_COUNT_CREATES_BAD = "Create BAD reqs"
 	MESSAGE_COUNT_READS_OK    = "Read OK reqs"
 	MESSAGE_COUNT_READS_BAD   = "Read BAD reqs"
+)
+
+var (
+	serverAddr = flag.String("addr", "localhost:50051", "host:port format")
 )
 
 type BlogServerClient struct {
@@ -113,7 +119,12 @@ func logStats(ch chan bool, messageOk string, messageBad string) {
 
 func main() {
 	ctx := context.Background()
-	client := &BlogServerClient{}
+	conn, err := grpc.NewClient(*serverAddr)
+	if err != nil {
+		panic(err)
+	}
+	defer conn.Close()
+	client := &BlogServerClient{api.NewBlogServerClient(conn)}
 
 	chanWriter := make(chan bool, COUNT_CREATES)
 	var wgCreator sync.WaitGroup
