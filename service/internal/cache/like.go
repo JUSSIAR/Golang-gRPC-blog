@@ -16,7 +16,7 @@ const (
 
 func getKeys(
 	eType string,
-	eId uint,
+	eId uint64,
 	authorLogin string,
 ) (string, string) {
 	prefix := POST_PREFIX
@@ -34,7 +34,7 @@ func Like(
 	ctx context.Context,
 	redisDB redis.Client,
 	eType string,
-	eId uint,
+	eId uint64,
 	authorLogin string,
 ) {
 	keyForEType, keyForHasLike := getKeys(eType, eId, authorLogin)
@@ -50,21 +50,20 @@ func Like(
 	likeCount, errLikeCount := redisDB.Get(ctx, keyForEType).Result()
 	if errLikeCount == redis.Nil {
 		panicIfErr(redisDB.Set(ctx, keyForEType, 1, 0).Err())
-		return
 	} else {
 		panicIfErr(errLikeCount)
 		counter, err := strconv.ParseInt(likeCount, 10, 64)
 		panicIfErr(err)
 		panicIfErr(redisDB.Set(ctx, keyForEType, counter+1, 0).Err())
 	}
-	panicIfErr(redisDB.SAdd(ctx, keyForHasLike, []uint{eId}).Err())
+	panicIfErr(redisDB.SAdd(ctx, keyForHasLike, []uint64{eId}).Err())
 }
 
 func Unlike(
 	ctx context.Context,
 	redisDB redis.Client,
 	eType string,
-	eId uint,
+	eId uint64,
 	authorLogin string,
 ) {
 	keyForEType, keyForHasLike := getKeys(eType, eId, authorLogin)
@@ -90,14 +89,14 @@ func Unlike(
 
 		panicIfErr(redisDB.Set(ctx, keyForEType, counter-1, 0).Err())
 	}
-	panicIfErr(redisDB.SRem(ctx, keyForHasLike, []uint{eId}).Err())
+	panicIfErr(redisDB.SRem(ctx, keyForHasLike, []uint64{eId}).Err())
 }
 
 func IsLikedByUser(
 	ctx context.Context,
 	redisDB redis.Client,
 	eType string,
-	eId uint,
+	eId uint64,
 	authorLogin string,
 ) bool {
 	_, keyForHasLike := getKeys(eType, eId, authorLogin)
